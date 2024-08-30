@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 import br.com.radio.management.api.common.ConvertDate;
+import br.com.radio.management.api.domain.exception.CustomAuthenticationException;
 import br.com.radio.management.api.domain.exception.ResourceNotFoundException;
 import br.com.radio.management.api.domain.exception.ResourceUserInactivatedException;
 import br.com.radio.management.api.domain.model.ErrorResponse;
@@ -77,11 +78,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }catch(BadCredentialsException e) {
             throw new BadCredentialsException("Usuário ou senha inválidos.");  
         } catch(ResourceNotFoundException e){
-            throw new ResourceNotFoundException(e.getMessage());
+            throw new CustomAuthenticationException(e.getMessage(), e);
         }catch(ResourceUserInactivatedException e){
-            throw new ResourceUserInactivatedException(e.getMessage());
+            throw new CustomAuthenticationException(e.getMessage(), e);
         }catch (Exception e) {
-            throw new InternalAuthenticationServiceException("Erro interno: " + e.getMessage());
+            throw new CustomAuthenticationException("Erro interno: " + e.getMessage(), e);
         }
     }
 
