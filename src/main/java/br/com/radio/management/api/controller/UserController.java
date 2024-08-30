@@ -57,6 +57,11 @@ public class UserController {
         return new ResponseEntity<>(userRegistered, HttpStatus.OK);    
     }
 
+    @PutMapping("active/user/{id}")
+    public void activeUser(@PathVariable Long id, @RequestBody UserRequestDTO userDto){
+
+        userService.activateUser(id ,userDto); 
+    }
 
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id) {

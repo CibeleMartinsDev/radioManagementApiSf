@@ -139,21 +139,25 @@ public class UserService implements CRUDService<UserRequestDTO, UserResponseDTO>
     }
 
 
-    // public UserResponseDTO activateUser(Long id) {
+    public void activateUser(Long id, UserRequestDTO userInactivated ) {
+       // obtem o usuário pelo id
+       UserResponseDTO userDto = getById(id);
 
-    //     // obtem o usuário pelo id
-    //     UserResponseDTO userDto = getById(id);
+       // criptografa a senha do usuário
+      String passwordUser = passwordEncoder.encode(userInactivated.getPasswordUser());
 
-    //     // transforma o usuario request em model
-    //     UserAdmin userModel = mapper.map(userDto, UserAdmin.class);
-    //     userModel.setDateInativation(null);
-        
-    //     // salva no banco
-    //     userModel = userRepository.save(userModel);
+      // transforma o usuario request em model
+      UserAdmin userModel = mapper.map(userInactivated, UserAdmin.class);
 
-    //     UserResponseDTO userResponse = mapper.map(userModel, UserResponseDTO.class);
-
-    //     return userResponse;
-    // }
+      userModel.setPasswordUser(passwordUser);
+      // seta o id, e todos os outros campos, exceto data de inativacao, para como estava no banco
+      userModel.setId(id);
+      userModel.setDateInativation(null);
+      userModel.setDateRegister(userDto.getDateRegister());
+      userModel.setEmail(userDto.getEmail());
+      userModel.setNameUser(userDto.getNameUser());
+      // salva no banco
+      userModel = userRepository.save(userModel);
+    }
 
 }
