@@ -1,15 +1,24 @@
 package br.com.radio.management.api.domain.model;
 
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "customer")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Customer {
 
     @Id
@@ -31,6 +40,10 @@ public class Customer {
 
     @Column(nullable = false)
     private String email;
+    
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Advertisement> advertisements;
 
     public Long getId() {
         return id;
@@ -108,6 +121,21 @@ public class Customer {
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+
+    /**
+     * @return List<Advertisement> return the advertisements
+     */
+    public List<Advertisement> getAdvertisements() {
+        return advertisements;
+    }
+
+    /**
+     * @param advertisements the advertisements to set
+     */
+    public void setAdvertisements(List<Advertisement> advertisements) {
+        this.advertisements = advertisements;
     }
 
 }

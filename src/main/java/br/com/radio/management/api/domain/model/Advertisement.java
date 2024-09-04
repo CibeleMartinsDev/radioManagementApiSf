@@ -3,8 +3,11 @@ package br.com.radio.management.api.domain.model;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,8 +25,9 @@ public class Advertisement {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "name_customer")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_customer", nullable = false)
+    @JsonBackReference
     private Customer customer;
 
     @Column(nullable = false)
@@ -132,20 +136,6 @@ public class Advertisement {
      */
     public void setAmount(String amount) {
         this.amount = amount;
-    }
-
-    /**
-     * @return Double return the datePayement
-     */
-    public Double getdatePayement() {
-        return datePayement;
-    }
-
-    /**
-     * @param datePayement the datePayement to set
-     */
-    public void setdatePayement(Double datePayement) {
-        this.datePayement = datePayement;
     }
 
     /**
