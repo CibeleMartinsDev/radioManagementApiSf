@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import br.com.radio.management.api.common.ConvertDate;
+import br.com.radio.management.api.domain.Enum.AdvertisementEnum;
 import br.com.radio.management.api.domain.exception.ResourceNotFoundException;
 import br.com.radio.management.api.domain.model.Advertisement;
 import br.com.radio.management.api.domain.model.UserAdmin;
@@ -33,7 +35,8 @@ public class AdvertisementService implements CRUDService<AdvertisementRequestDTO
 
         List<Advertisement> Advertisements = AdvertisementRepository.findAll();
 
-        List<AdvertisementResponseDTO> AdvertisementsResponse = Advertisements.stream().map(t -> mapper.map(t, AdvertisementResponseDTO.class)).collect(Collectors.toList());
+        List<AdvertisementResponseDTO> AdvertisementsResponse = Advertisements.stream()
+                .map(t -> mapper.map(t, AdvertisementResponseDTO.class)).collect(Collectors.toList());
 
         return AdvertisementsResponse;
     }
@@ -43,7 +46,7 @@ public class AdvertisementService implements CRUDService<AdvertisementRequestDTO
         Optional<Advertisement> Advertisements = AdvertisementRepository.findById(id);
 
         UserAdmin user = (UserAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(Advertisements.isEmpty()) {
+        if (Advertisements.isEmpty()) {
             throw new ResourceNotFoundException("Propaganda não encontrada.");
         }
 
@@ -57,12 +60,13 @@ public class AdvertisementService implements CRUDService<AdvertisementRequestDTO
 
         // quem é o usuário que faz essa requisição
         UserAdmin user = (UserAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    
+        advertisementIsActive(AdvertisementModel);
         AdvertisementModel.setId(null);
-        AdvertisementModel.setDateRegister(new Date());
+        AdvertisementModel.setDateRegister(ConvertDate.convertDateForDateHour(new Date()));
+
 
         AdvertisementModel = AdvertisementRepository.save(AdvertisementModel);
-     
+
         return mapper.map(AdvertisementModel, AdvertisementResponseDTO.class);
     }
 
@@ -72,19 +76,39 @@ public class AdvertisementService implements CRUDService<AdvertisementRequestDTO
         Advertisement AdvertisementModel = mapper.map(dto, Advertisement.class);
 
         UserAdmin user = (UserAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+        advertisementIsActive(AdvertisementModel);
         AdvertisementModel.setId(id);
         AdvertisementModel = AdvertisementRepository.save(AdvertisementModel);
-      
+
         return mapper.map(AdvertisementModel, AdvertisementResponseDTO.class);
     }
 
     @Override
     public void deleteById(Long id) {
-        getById(id);
-        AdvertisementRepository.deleteById(id);
-    }
-    
+        Optional<Advertisement> advertisementModel = AdvertisementRepository.findById(id);
 
- 
+        if (advertisementModel.isEmpty()) {
+            throw new ResourceNotFoundException("Não foi possível encontrar a propaganda que deseja deesativar.");
+        }
+
+        Advertisement advertisement = advertisementModel.get();
+
+        advertisement.setDateDeactivation(ConvertDate.convertDateForDateHour(new Date()));
+
+        AdvertisementRepository.save(advertisement);
+
+    }
+
+
+    public void advertisementIsActive(Advertisement advertisementModel){
+        if(advertisementModel.isActive().equals(AdvertisementEnum.ACTIVE.isActive())){
+            advertisementModel.setDateDeactivation(null);
+            advertisementModel.setDateActivation(ConvertDate.convertDateForDateHour(new Date()));
+        }else {
+            advertisementModel.setDateActivation(null);
+            advertisementModel.setDateDeactivation(ConvertDate.convertDateForDateHour(new Date()));
+        }
+
+    }
+
 }

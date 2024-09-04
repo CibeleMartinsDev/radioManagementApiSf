@@ -34,7 +34,7 @@ public class Advertisement {
     private String frenquencyDivulgation;
 
     @Column(nullable = false)
-    private List<Integer> advertisingSchedules;
+    private List<String> advertisingSchedules;
 
     @Column(nullable = false)
     private String amount;
@@ -45,11 +45,11 @@ public class Advertisement {
     @Column(nullable = false)
     private Boolean active;
 
-    private Date dateRegister;
+    private String dateRegister;
 
-    private Date dateActivation;
+    private String dateActivation;
 
-    private Date dateDeactivation;
+    private String dateDeactivation;
 
     @Column(columnDefinition = "TEXT")
     private String observation;
@@ -113,14 +113,14 @@ public class Advertisement {
     /**
      * @return List<Integer> return the advertisingSchedules
      */
-    public List<Integer> getAdvertisingSchedules() {
+    public List<String> getAdvertisingSchedules() {
         return advertisingSchedules;
     }
 
     /**
      * @param advertisingSchedules the advertisingSchedules to set
      */
-    public void setAdvertisingSchedules(List<Integer> advertisingSchedules) {
+    public void setAdvertisingSchedules(List<String> advertisingSchedules) {
         this.advertisingSchedules = advertisingSchedules;
     }
 
@@ -155,14 +155,14 @@ public class Advertisement {
     /**
      * @return Date return the dateRegister
      */
-    public Date getDateRegister() {
+    public String getDateRegister() {
         return dateRegister;
     }
 
     /**
      * @param dateRegister the dateRegister to set
      */
-    public void setDateRegister(Date dateRegister) {
+    public void setDateRegister(String dateRegister) {
         this.dateRegister = dateRegister;
     }
 
@@ -198,28 +198,28 @@ public class Advertisement {
     /**
      * @return Date return the dateActivation
      */
-    public Date getDateActivation() {
+    public String getDateActivation() {
         return dateActivation;
     }
 
     /**
      * @param dateActivation the dateActivation to set
      */
-    public void setDateActivation(Date dateActivation) {
+    public void setDateActivation(String dateActivation) {
         this.dateActivation = dateActivation;
     }
 
     /**
      * @return Date return the dateDeactivation
      */
-    public Date getDateDeactivation() {
+    public String getDateDeactivation() {
         return dateDeactivation;
     }
 
     /**
      * @param dateDeactivation the dateDeactivation to set
      */
-    public void setDateDeactivation(Date dateDeactivation) {
+    public void setDateDeactivation(String dateDeactivation) {
         this.dateDeactivation = dateDeactivation;
     }
 

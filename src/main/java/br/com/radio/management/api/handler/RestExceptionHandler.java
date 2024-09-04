@@ -2,6 +2,7 @@ package br.com.radio.management.api.handler;
 
 import java.util.Date;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,14 +38,14 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    // @ExceptionHandler(Exception.class)
-    // public ResponseEntity<ErrorResponse> handlerResourceInternalServerErrorException(Exception exception) {
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handlerDataIntegrityViolationException(DataIntegrityViolationException exception) {
 
-    //     String dateHour = ConvertDate.convertDateForDateHour(new Date());
+        String dateHour = ConvertDate.convertDateForDateHour(new Date());
 
-    //     ErrorResponse error = new ErrorResponse(dateHour, HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error",exception.getMessage());
+        ErrorResponse error = new ErrorResponse(dateHour, HttpStatus.BAD_REQUEST.value(), "Bad Request",exception.getMessage());
 
-    //     return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
     
 }
