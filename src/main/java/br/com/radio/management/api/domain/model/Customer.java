@@ -26,7 +26,7 @@ public class Customer {
     @Column(name = "id_customer")
     private Long id;
 
-    @Column(nullable = false, name = "name_customer")
+    @Column(nullable = false, name = "name_customer", unique = true)
     private String name;
 
     @Column(nullable = false)

@@ -20,6 +20,7 @@ import br.com.radio.management.api.domain.repository.AdvertisementRepository;
 import br.com.radio.management.api.domain.repository.CustomerRepository;
 import br.com.radio.management.api.dto.Advertisement.AdvertisementRequestDTO;
 import br.com.radio.management.api.dto.Advertisement.AdvertisementResponseDTO;
+import jakarta.transaction.Transactional;
 
 @Service
 public class AdvertisementService implements CRUDService<AdvertisementRequestDTO, AdvertisementResponseDTO> {
@@ -59,6 +60,7 @@ public class AdvertisementService implements CRUDService<AdvertisementRequestDTO
     }
 
     @Override
+    @Transactional
     public AdvertisementResponseDTO register(AdvertisementRequestDTO dto) {
 
         
@@ -78,6 +80,7 @@ public class AdvertisementService implements CRUDService<AdvertisementRequestDTO
     }
 
     @Override
+    @Transactional
     public AdvertisementResponseDTO updateById(Long id, AdvertisementRequestDTO dto) {
         getById(id);
         Advertisement advertisementModel = new Advertisement();
@@ -119,6 +122,7 @@ public class AdvertisementService implements CRUDService<AdvertisementRequestDTO
 
     }
 
+    @Transactional
     public void getCustomerOfAdvertisement(AdvertisementRequestDTO dto, Advertisement advertisementModel){
        Optional<Customer> customer = customerRepository.findByName(dto.getCustomer());
 
