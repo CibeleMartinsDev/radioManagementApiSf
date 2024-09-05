@@ -120,15 +120,21 @@ public class AdvertisementService implements CRUDService<AdvertisementRequestDTO
     }
 
     public void getCustomerOfAdvertisement(AdvertisementRequestDTO dto, Advertisement advertisementModel){
-        Customer customer = customerRepository.findByName(dto.getCustomer());
+       Optional<Customer> customer = customerRepository.findByName(dto.getCustomer());
+
+       if(!customer.isEmpty()){
         advertisementModel.setName(dto.getName());
-        advertisementModel.setCustomer(customer);  // Associa o customer buscado
+        advertisementModel.setCustomer(customer.get());  // Associa o customer buscado
         advertisementModel.setFrenquencyDivulgation(dto.getFrenquencyDivulgation());
         advertisementModel.setAdvertisingSchedules(dto.getAdvertisingSchedules());
         advertisementModel.setAmount(dto.getAmount());
         advertisementModel.setDatePayement(dto.getDatePayement());
         advertisementModel.setActive(dto.isActive());
         advertisementModel.setObservation(dto.getObservation());
+       }else {
+        throw new ResourceNotFoundException("Cliente da propaganda não encontrado.");
+       }
+      
     }
 
 }
