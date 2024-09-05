@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +29,7 @@ public class Advertisement {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_customer", nullable = false)
-    @JsonBackReference
+    @JsonIgnore
     private Customer customer;
 
     @Column(nullable = false)
@@ -85,8 +87,9 @@ public class Advertisement {
     /**
      * @return Customer return the customer
      */
-    public Customer getCustomer() {
-        return customer;
+    @JsonProperty("customerName")
+    public String getCustomer() {
+        return customer != null ? customer.getName() : null;
     }
 
     /**

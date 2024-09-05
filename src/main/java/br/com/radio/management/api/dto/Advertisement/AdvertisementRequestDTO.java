@@ -14,7 +14,7 @@ public class AdvertisementRequestDTO {
 
     private String name;
 
-    private Customer customer;
+    private String customer;
 
     private String frenquencyDivulgation;
 
@@ -65,14 +65,14 @@ public class AdvertisementRequestDTO {
     /**
      * @return Customer return the customer
      */
-    public Customer getCustomer() {
+    public String getCustomer() {
         return customer;
     }
 
     /**
      * @param customer the customer to set
      */
-    public void setCustomer(Customer customer) {
+    public void setCustomer(String customer) {
         this.customer = customer;
     }
 

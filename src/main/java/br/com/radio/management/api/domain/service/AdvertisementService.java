@@ -14,8 +14,10 @@ import br.com.radio.management.api.common.ConvertDate;
 import br.com.radio.management.api.domain.Enum.AdvertisementEnum;
 import br.com.radio.management.api.domain.exception.ResourceNotFoundException;
 import br.com.radio.management.api.domain.model.Advertisement;
+import br.com.radio.management.api.domain.model.Customer;
 import br.com.radio.management.api.domain.model.UserAdmin;
 import br.com.radio.management.api.domain.repository.AdvertisementRepository;
+import br.com.radio.management.api.domain.repository.CustomerRepository;
 import br.com.radio.management.api.dto.Advertisement.AdvertisementRequestDTO;
 import br.com.radio.management.api.dto.Advertisement.AdvertisementResponseDTO;
 
@@ -24,6 +26,9 @@ public class AdvertisementService implements CRUDService<AdvertisementRequestDTO
 
     @Autowired
     private AdvertisementRepository AdvertisementRepository;
+
+    @Autowired 
+    private CustomerRepository customerRepository;
 
     @Autowired
     private ModelMapper mapper;
@@ -56,31 +61,34 @@ public class AdvertisementService implements CRUDService<AdvertisementRequestDTO
     @Override
     public AdvertisementResponseDTO register(AdvertisementRequestDTO dto) {
 
-        Advertisement AdvertisementModel = mapper.map(dto, Advertisement.class);
+        
+        Advertisement advertisementModel = new Advertisement();
+        getCustomerOfAdvertisement(dto, advertisementModel);
 
         // quem é o usuário que faz essa requisição
         UserAdmin user = (UserAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        advertisementIsActive(AdvertisementModel);
-        AdvertisementModel.setId(null);
-        AdvertisementModel.setDateRegister(ConvertDate.convertDateForDateHour(new Date()));
+        advertisementIsActive(advertisementModel);
+        advertisementModel.setId(null);
+        advertisementModel.setDateRegister(ConvertDate.convertDateForDateHour(new Date()));
 
 
-        AdvertisementModel = AdvertisementRepository.save(AdvertisementModel);
+        advertisementModel = AdvertisementRepository.save(advertisementModel);
 
-        return mapper.map(AdvertisementModel, AdvertisementResponseDTO.class);
+        return mapper.map(advertisementModel, AdvertisementResponseDTO.class);
     }
 
     @Override
     public AdvertisementResponseDTO updateById(Long id, AdvertisementRequestDTO dto) {
         getById(id);
-        Advertisement AdvertisementModel = mapper.map(dto, Advertisement.class);
+        Advertisement advertisementModel = new Advertisement();
+        getCustomerOfAdvertisement(dto, advertisementModel);
 
         UserAdmin user = (UserAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        advertisementIsActive(AdvertisementModel);
-        AdvertisementModel.setId(id);
-        AdvertisementModel = AdvertisementRepository.save(AdvertisementModel);
+        advertisementIsActive(advertisementModel);
+        advertisementModel.setId(id);
+        advertisementModel = AdvertisementRepository.save(advertisementModel);
 
-        return mapper.map(AdvertisementModel, AdvertisementResponseDTO.class);
+        return mapper.map(advertisementModel, AdvertisementResponseDTO.class);
     }
 
     @Override
@@ -109,6 +117,18 @@ public class AdvertisementService implements CRUDService<AdvertisementRequestDTO
             advertisementModel.setDateDeactivation(ConvertDate.convertDateForDateHour(new Date()));
         }
 
+    }
+
+    public void getCustomerOfAdvertisement(AdvertisementRequestDTO dto, Advertisement advertisementModel){
+        Customer customer = customerRepository.findByName(dto.getCustomer());
+        advertisementModel.setName(dto.getName());
+        advertisementModel.setCustomer(customer);  // Associa o customer buscado
+        advertisementModel.setFrenquencyDivulgation(dto.getFrenquencyDivulgation());
+        advertisementModel.setAdvertisingSchedules(dto.getAdvertisingSchedules());
+        advertisementModel.setAmount(dto.getAmount());
+        advertisementModel.setDatePayement(dto.getDatePayement());
+        advertisementModel.setActive(dto.isActive());
+        advertisementModel.setObservation(dto.getObservation());
     }
 
 }
