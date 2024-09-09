@@ -39,6 +39,12 @@ public class CustomerController {
         return ResponseEntity.ok(CustomerService.getById(id));
     }
 
+    @GetMapping("/search/{name}")
+    public ResponseEntity<CustomerResponseDTO> getById(@PathVariable String name) {
+
+        return ResponseEntity.ok(CustomerService.getByName(name));
+    }
+
     @PostMapping
     public ResponseEntity<CustomerResponseDTO> register(@RequestBody CustomerRequestDTO costCenter) {
 

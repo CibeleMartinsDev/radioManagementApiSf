@@ -20,6 +20,7 @@ import br.com.radio.management.api.domain.repository.AdvertisementRepository;
 import br.com.radio.management.api.domain.repository.CustomerRepository;
 import br.com.radio.management.api.dto.Advertisement.AdvertisementRequestDTO;
 import br.com.radio.management.api.dto.Advertisement.AdvertisementResponseDTO;
+import br.com.radio.management.api.dto.Customer.CustomerResponseDTO;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -139,6 +140,17 @@ public class AdvertisementService implements CRUDService<AdvertisementRequestDTO
         throw new ResourceNotFoundException("Cliente da propaganda não encontrado.");
        }
       
+    }
+
+      public AdvertisementResponseDTO getByName(String name){
+
+        Optional<Advertisement> customer = AdvertisementRepository.findByName(name);
+        UserAdmin user = (UserAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(customer.isEmpty()) {
+            throw new ResourceNotFoundException("Propaganda não encontrada.");
+        }
+        return mapper.map(customer.get(), AdvertisementResponseDTO.class);
+
     }
 
 }

@@ -39,6 +39,12 @@ public class AdvertisementController {
         return ResponseEntity.ok(AdvertisementService.getById(id));
     }
 
+    @GetMapping("/search/{name}")
+    public ResponseEntity<AdvertisementResponseDTO> getById(@PathVariable String name) {
+
+        return ResponseEntity.ok(AdvertisementService.getByName(name));
+    }
+
     @PostMapping
     public ResponseEntity<AdvertisementResponseDTO> register(@RequestBody AdvertisementRequestDTO Advertisement) {
         AdvertisementResponseDTO AdvertisementResponse = AdvertisementService.register(Advertisement);

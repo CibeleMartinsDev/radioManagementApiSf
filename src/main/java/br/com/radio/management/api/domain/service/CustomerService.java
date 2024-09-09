@@ -83,5 +83,16 @@ public class CustomerService implements CRUDService<CustomerRequestDTO, Customer
         CustomerRepository.deleteById(id);
     }
 
+    public CustomerResponseDTO getByName(String name){
+
+        Optional<Customer> customer = CustomerRepository.findByName(name);
+        UserAdmin user = (UserAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(customer.isEmpty()) {
+            throw new ResourceNotFoundException("Cliente não encontrado.");
+        }
+        return mapper.map(customer.get(), CustomerResponseDTO.class);
+
+    }
+
     
 }
