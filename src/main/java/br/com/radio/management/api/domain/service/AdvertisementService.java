@@ -103,11 +103,7 @@ public class AdvertisementService implements CRUDService<AdvertisementRequestDTO
             throw new ResourceNotFoundException("Não foi possível encontrar a propaganda que deseja deesativar.");
         }
 
-        Advertisement advertisement = advertisementModel.get();
-
-        advertisement.setDateDeactivation(ConvertDate.convertDateForDateHour(new Date()));
-
-        AdvertisementRepository.save(advertisement);
+        AdvertisementRepository.deleteById(id);
 
     }
 
